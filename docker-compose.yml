@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  pihole:
+    image: pihole/pihole:2022.12.1
+    networks:
+      qnet-network:
+        ipv4_address: 192.168.69.133
+    environment:
+      WEBPASSWORD: Mb9FQJ7aDP5GW5rm
+      TZ: America/LosAngeles
+    volumes:
+      - etc-pihole:/etc/pihole
+      - etc-dnsmasq.d:/etc/dnsmasq.d
+    restart: unless-stopped
+
+networks:
+  qnet-network:
+    driver_opts:
+      iface: eth0
+    driver: qnet
+    ipam:
+      driver: qnet
+      options:
+        iface: eth0
+      config:
+        - subnet: 192.168.69.0/24
+          gateway: 192.168.69.1
+
+volumes:
+  etc-pihole:
+  etc-dnsmasq.d:
+  
+  cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
